@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 import sqlite3
 
+
 #--------------------BANCO DE DADOS--------------------
 def conectar():
     conn = sqlite3.connect("banco.db")
@@ -15,6 +16,7 @@ def conectar():
     """)
     conn.commit()
     conn.close()
+
 
 #--------------------FUNÇÕES--------------------
 def adicionar_aluno(nome, nota):
@@ -67,7 +69,7 @@ def janela_adicionar():
             try:
                 nota_valor = float(nota.get())
                 adicionar_aluno(nome.get(), nota_valor)
-                messagebox.showinfo("Sucesso", "Aluno adicionado.") 
+                messagebox.showinfo("Sucesso", "Aluno adicionado.")
                 nome.delete(0, tk.END)
                 nota.delete(0, tk.END)
             except ValueError:
@@ -146,6 +148,20 @@ def janela_deletar():
     tk.Button(dele, text="Deletar", command=deletar, width=10).pack(pady=5)
     tk.Button(dele, text="Voltar", command=lambda: [dele.destroy(), janela.deiconify()], width=10).pack()
 
+def janela_sair():
+    sair = tk.Toplevel()
+    centralizar_janela(sair, 250, 150)
+    sair.title("Sair")
+
+    tk.Label(sair, text="Deseja realmente sair?").pack(pady=10)
+
+    botoes = tk.Frame(sair)
+    botoes.pack(pady=10)
+
+    tk.Button(botoes, text="Sim", width=10, command=janela.quit).pack(side=tk.LEFT, padx=5)
+    tk.Button(botoes, text="Não", width=10, command=sair.destroy).pack(side=tk.LEFT, padx=5)
+
+
 def centralizar_janela(janela, largura, altura):
     tela_largura = janela.winfo_screenwidth()
     tela_altura = janela.winfo_screenheight()
@@ -154,7 +170,7 @@ def centralizar_janela(janela, largura, altura):
     janela.geometry(f"{largura}x{altura}+{x}+{y}")
 
 
-#--------------------TELA INICIAL--------------------
+#--------------------JANELA PRINCIPAL--------------------
 conectar()
 janela = tk.Tk()
 centralizar_janela(janela, 300, 300)
@@ -167,5 +183,6 @@ tk.Button(janela, text="Adicionar Aluno", command=janela_adicionar, width=20).pa
 tk.Button(janela, text="Listar Alunos", command=janela_listar, width=20).pack(pady=5)
 tk.Button(janela, text="Atualizar Aluno", command=janela_atualizar, width=20).pack(pady=5)
 tk.Button(janela, text="Deletar Aluno", command=janela_deletar, width=20).pack(pady=5)
+tk.Button(janela, text= 'sair', command=janela_sair, width=20) .pack(pady=5)
 
 janela.mainloop()
