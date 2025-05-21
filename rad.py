@@ -173,9 +173,12 @@ def centralizar_janela(janela, largura, altura):
 #--------------------JANELA PRINCIPAL--------------------
 conectar()
 janela = tk.Tk()
+root = janela
 centralizar_janela(janela, 300, 300)
 janela.title("Sistema de Notas")
 janela.geometry("300x300")
+
+root.configure(background="lightblue")
 
 tk.Label(janela, text="Bem-vindo ao sistema de notas!\nO que deseja fazer?", font=("Arial", 12)).pack(pady=20)
 
