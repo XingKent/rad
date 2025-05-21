@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 import sqlite3
 
+#--------------------BANCO DE DADOS--------------------
 def conectar():
     conn = sqlite3.connect("banco.db")
     cursor = conn.cursor()
@@ -15,6 +16,7 @@ def conectar():
     conn.commit()
     conn.close()
 
+#--------------------FUNÇÕES--------------------
 def adicionar_aluno(nome, nota):
     conn = sqlite3.connect("banco.db")
     cursor = conn.cursor()
@@ -44,6 +46,8 @@ def deletar_aluno(id):
     conn.commit()
     conn.close()
 
+
+#--------------------JANELAS--------------------
 def janela_adicionar():
     janela.withdraw()
     add = tk.Toplevel()
@@ -79,13 +83,14 @@ def janela_adicionar():
 def janela_listar():
     janela.withdraw()
     lista = tk.Toplevel()
-    centralizar_janela(lista, 300, 300)
+    centralizar_janela(lista, 350, 350)
     lista.title("Listar Alunos")
 
     dados = obter_todos()
 
     for item in dados:
-        tk.Label(lista, text=f"ID: {item[0]} | Nome: {item[1]} | Nota: {item[2]}").pack()
+        situacao = "Aprovado" if item[2] >= 6 else "Reprovado"
+        tk.Label(lista, text=f"ID: {item[0]} | Nome: {item[1]} | Nota: {item[2]} | {situacao}").pack()
 
     tk.Button(lista, text="Voltar", command=lambda: [lista.destroy(), janela.deiconify()], width=10).pack(pady=5)
 
@@ -148,6 +153,8 @@ def centralizar_janela(janela, largura, altura):
     y = (tela_altura // 2) - (altura // 2)
     janela.geometry(f"{largura}x{altura}+{x}+{y}")
 
+
+#--------------------TELA INICIAL--------------------
 conectar()
 janela = tk.Tk()
 centralizar_janela(janela, 300, 300)
