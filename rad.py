@@ -183,6 +183,6 @@ tk.Button(janela, text="Adicionar Aluno", command=janela_adicionar, width=20).pa
 tk.Button(janela, text="Listar Alunos", command=janela_listar, width=20).pack(pady=5)
 tk.Button(janela, text="Atualizar Aluno", command=janela_atualizar, width=20).pack(pady=5)
 tk.Button(janela, text="Deletar Aluno", command=janela_deletar, width=20).pack(pady=5)
-tk.Button(janela, text= 'sair', command=janela_sair, width=20) .pack(pady=5)
+tk.Button(janela, text= 'Sair', command=janela_sair, width=20) .pack(pady=5)
 
 janela.mainloop()
