@@ -179,10 +179,32 @@ janela.geometry("300x300")
 
 tk.Label(janela, text="Bem-vindo ao sistema de notas!\nO que deseja fazer?", font=("Arial", 12)).pack(pady=20)
 
-tk.Button(janela, text="Adicionar Aluno", command=janela_adicionar, width=20).pack(pady=5)
-tk.Button(janela, text="Listar Alunos", command=janela_listar, width=20).pack(pady=5)
-tk.Button(janela, text="Atualizar Aluno", command=janela_atualizar, width=20).pack(pady=5)
-tk.Button(janela, text="Deletar Aluno", command=janela_deletar, width=20).pack(pady=5)
-tk.Button(janela, text= 'Sair', command=janela_sair, width=20) .pack(pady=5)
+def mudar_cor_ao_passar_mouse(botao, cor_hover="#d1d1d1", cor_padrao="#f0f0f0"):
+    def ao_entrar(evento):
+        botao.config(background=cor_hover)
+    def ao_sair(evento):
+        botao.config(background=cor_padrao)
+    botao.bind("<Enter>", ao_entrar)
+    botao.bind("<Leave>", ao_sair)
+
+btn_adicionar = tk.Button(janela, text="Adicionar Aluno", command=janela_adicionar, width=20)
+btn_adicionar.pack(pady=5)
+mudar_cor_ao_passar_mouse(btn_adicionar)
+
+btn_listar = tk.Button(janela, text="Listar Alunos", command=janela_listar, width=20)
+btn_listar.pack(pady=5)
+mudar_cor_ao_passar_mouse(btn_listar)
+
+btn_atualizar = tk.Button(janela, text="Atualizar Aluno", command=janela_atualizar, width=20)
+btn_atualizar.pack(pady=5)
+mudar_cor_ao_passar_mouse(btn_atualizar)
+
+btn_deletar = tk.Button(janela, text="Deletar Aluno", command=janela_deletar, width=20)
+btn_deletar.pack(pady=5)
+mudar_cor_ao_passar_mouse(btn_deletar)
+
+btn_sair = tk.Button(janela, text="Sair", command=janela_sair, width=20)
+btn_sair.pack(pady=5)
+mudar_cor_ao_passar_mouse(btn_sair)
 
 janela.mainloop()
