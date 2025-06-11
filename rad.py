@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox
 import sqlite3
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
 #--------------------BANCO DE DADOS--------------------
@@ -9,14 +11,13 @@ def conectar():
     cursor = conn.cursor()
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS alunos ( 
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id INTEGER PRIMARY KEY,
             nome TEXT NOT NULL,
-            nota REAL NOT NULL                
+            nota REAL NOT NULL
         )
     """)
     conn.commit()
     conn.close()
-
 
 #--------------------FUNÇÕES--------------------
 def adicionar_aluno(nome, nota):
@@ -85,16 +86,58 @@ def janela_adicionar():
 def janela_listar():
     janela.withdraw()
     lista = tk.Toplevel()
-    centralizar_janela(lista, 350, 350)
-    lista.title("Listar Alunos")
+    centralizar_janela(lista, 500, 600)
+    lista.title("Listar Alunos e Média da Turma")
 
     dados = obter_todos()
 
+    if not dados:
+        messagebox.showinfo("Vazio", "Nenhum aluno cadastrado para exibir.", parent=lista)
+        lista.destroy()
+        janela.deiconify()
+        return
+
+    frame_grafico = tk.Frame(lista)
+    frame_grafico.pack(pady=10)
+
+    notas = [item[2] for item in dados]
+    media = sum(notas) / len(notas) if notas else 0
+
+    figura = plt.Figure(figsize=(4, 3), dpi=100)
+    ax = figura.add_subplot(111)
+    
+    barras = ax.bar(["Média da Turma"], [media], color='skyblue')
+    ax.set_ylabel("Nota")
+    ax.set_title("Média de Notas da Turma")
+    ax.set_ylim(0, 10)
+
+    for barra in barras:
+        altura = barra.get_height()
+        ax.text(barra.get_x() + barra.get_width() / 2.0, altura, f'{altura:.2f}', ha='center', va='bottom')
+
+    canvas = FigureCanvasTkAgg(figura, master=frame_grafico)
+    canvas.draw()
+    canvas.get_tk_widget().pack()
+
+    frame_lista = tk.Frame(lista)
+    frame_lista.pack(pady=10)
+
+    tk.Label(frame_lista, text="-"*60).pack()
+    tk.Label(frame_lista, text="Lista de Alunos", font=("Arial", 12, "bold")).pack()
+    
     for item in dados:
         situacao = "Aprovado" if item[2] >= 6 else "Reprovado"
-        tk.Label(lista, text=f"ID: {item[0]} | Nome: {item[1]} | Nota: {item[2]} | {situacao}").pack()
+        cor_situacao = "green" if situacao == "Aprovado" else "red"
+        
+        texto_aluno = f"ID: {item[0]} | Nome: {item[1]} | Nota: {item[2]}"
+        
+        aluno_frame = tk.Frame(frame_lista)
+        aluno_frame.pack(fill='x', padx=10)
+        
+        tk.Label(aluno_frame, text=texto_aluno).pack(side=tk.LEFT)
+        tk.Label(aluno_frame, text=situacao, fg=cor_situacao).pack(side=tk.RIGHT)
 
-    tk.Button(lista, text="Voltar", command=lambda: [lista.destroy(), janela.deiconify()], width=10).pack(pady=5)
+    tk.Button(lista, text="Voltar", command=lambda: [lista.destroy(), janela.deiconify()], width=10).pack(pady=10)
 
 def janela_atualizar():
     janela.withdraw()
@@ -136,6 +179,7 @@ def janela_deletar():
     tk.Label(dele, text="ID do aluno para deletar:").pack()
     id_entry = tk.Entry(dele)
     id_entry.pack()
+    
 
     def deletar():
         try:
