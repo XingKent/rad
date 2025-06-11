@@ -1,3 +1,4 @@
 banco.db
 *.sqlite
 *.sqlite3
+venv
